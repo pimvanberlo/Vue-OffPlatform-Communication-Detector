@@ -179,9 +179,9 @@ export default {
       try {
         const result = await detectOffPlatformCommunication(messageText);
         
-        if (result.confidence >= this.aiConfidenceThreshold) {
+        if (result.detected && result.confidence >= this.aiConfidenceThreshold) {
           this.showOffPlatformWarning('ai', result.reason, result.confidence);
-          return true; // Return true if flagged
+          return true; // Return true if detected and confidence threshold is met
         }
         return false; // Return false if not flagged
       } catch (error) {
