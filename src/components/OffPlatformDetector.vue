@@ -156,7 +156,7 @@ export default {
         return;
       }
       
-      // Perform regex check immediately
+      // Only perform regex check while typing
       if (this.enableRegexDetection) {
         const regexResult = basicRegexCheck(currentMessage, this.supportedLanguages);
         if (regexResult.detected) {
@@ -165,12 +165,7 @@ export default {
         }
       }
       
-      // Debounce AI detection
-      if (this.enableAiDetection && currentMessage.length > 10) {
-        this.debounceTimeout = setTimeout(() => {
-          this.analyzeWithAI(currentMessage);
-        }, this.aiDetectionDebounce);
-      }
+      // AI detection is now only done on send, not during typing
     },
     
     async analyzeWithAI(messageText) {
@@ -186,11 +181,14 @@ export default {
         
         if (result.confidence >= this.aiConfidenceThreshold) {
           this.showOffPlatformWarning('ai', result.reason, result.confidence);
+          return true; // Return true if flagged
         }
+        return false; // Return false if not flagged
       } catch (error) {
         console.error('Error analyzing message:', error);
         // Optionally notify the user of error
         this.$emit('detection-error', error);
+        return false;
       } finally {
         this.isAnalyzing = false;
       }
@@ -217,16 +215,34 @@ export default {
       });
     },
     
-    handleSend() {
+    async handleSend() {
       if (!this.canSend) {
         return;
       }
       
+      // If already flagged by regex and force send is allowed
       if (this.showWarning && this.allowForceSend) {
         this.showForceSendDialog = true;
         return;
       }
       
+      // Run AI detection only when sending, not during typing
+      if (this.enableAiDetection && this.message.trim().length > 10) {
+        const flagged = await this.analyzeWithAI(this.message.trim());
+        
+        // If AI flagged it and force send is allowed, show dialog
+        if (flagged && this.allowForceSend) {
+          this.showForceSendDialog = true;
+          return;
+        } 
+        
+        // If AI flagged it and force send is not allowed, prevent sending
+        if (flagged && !this.allowForceSend) {
+          return;
+        }
+      }
+      
+      // No issues detected or force send confirmed
       this.sendMessage();
     },
     

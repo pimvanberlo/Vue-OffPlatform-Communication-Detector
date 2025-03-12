@@ -22,7 +22,7 @@ const PHONE_PATTERNS = [
 const SOCIAL_MEDIA_PATTERNS = [
   /\b(?:facebook|fb|insta|instagram|twitter|x.com|tiktok|discord|snap|snapchat|reddit|telegram|whatsapp|signal|youtube|linkedin)\s?(?:[:.]|username|handle|profile|id)?\s?[:#@]?\s?[\w.]{3,30}\b/gi,
   /\b@[\w.]{3,30}\b/g, // Generic handle with @
-  /\b(?:user|username|handle|profile|id)?\s?[:#]?\s?[\w.]{3,30}\b/gi, // Username without @
+  // Removed overly broad pattern that was causing false positives
 ];
 
 // URL patterns
