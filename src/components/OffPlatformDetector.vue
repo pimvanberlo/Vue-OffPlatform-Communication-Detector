@@ -228,34 +228,77 @@ export default {
         return;
       }
       
-      // Run AI detection only when sending, not during typing
-      if (this.enableAiDetection && this.message.trim().length > 10) {
-        const flagged = await this.analyzeWithAI(this.message.trim());
+      // If already flagged by regex and force send is not allowed, prevent sending
+      if (this.showWarning && !this.allowForceSend) {
+        return;
+      }
+      
+      // Send the message first
+      const sentMessage = this.message.trim();
+      const wasFlagged = this.showWarning;
+      const detectionType = this.detectionType;
+      const detectionConfidence = this.detectionConfidence;
+      
+      // Reset component state before sending
+      const messageToSend = this.message.trim();
+      this.message = '';
+      this.showWarning = false;
+      this.showForceSendDialog = false;
+      this.lastAnalyzedMessage = '';
+      
+      // Send the message
+      this.$emit('send', {
+        message: messageToSend,
+        wasFlagged: wasFlagged,
+        detectionType: detectionType,
+        confidence: detectionConfidence
+      });
+      
+      // After sending, run AI detection
+      if (this.enableAiDetection && sentMessage.length > 10) {
+        this.isAnalyzing = true;
         
-        // If AI flagged it and force send is allowed, show dialog
-        if (flagged && this.allowForceSend) {
-          this.showForceSendDialog = true;
-          return;
-        } 
-        
-        // If AI flagged it and force send is not allowed, prevent sending
-        if (flagged && !this.allowForceSend) {
-          return;
+        try {
+          const result = await detectOffPlatformCommunication(sentMessage);
+          
+          if (result.detected && result.confidence >= this.aiConfidenceThreshold) {
+            // Emit a warning after the message is sent
+            this.$emit('detection-warning', {
+              type: 'ai',
+              confidence: result.confidence,
+              reason: result.reason,
+              message: sentMessage,
+              postSend: true // Indicates this was detected after sending
+            });
+          }
+        } catch (error) {
+          console.error('Error analyzing message:', error);
+          this.$emit('detection-error', error);
+        } finally {
+          this.isAnalyzing = false;
         }
       }
       
-      // No issues detected or force send confirmed
-      this.sendMessage();
+      // Focus back on input
+      this.$nextTick(() => {
+        if (this.$refs.messageInput) {
+          this.$refs.messageInput.focus();
+        }
+      });
     },
     
-    sendMessage() {
-      const messageToSend = this.message.trim();
-      
+    cancelForceSend() {
+      this.showForceSendDialog = false;
+    },
+    
+    confirmForceSend() {
+      // Send message with force send flag
       this.$emit('send', {
-        message: messageToSend,
-        wasFlagged: this.showWarning,
+        message: this.message.trim(),
+        wasFlagged: true,
         detectionType: this.detectionType,
-        confidence: this.detectionConfidence
+        confidence: this.detectionConfidence,
+        forceSent: true
       });
       
       // Reset component state
@@ -272,14 +315,6 @@ export default {
           this.$refs.messageInput.focus();
         }
       });
-    },
-    
-    cancelForceSend() {
-      this.showForceSendDialog = false;
-    },
-    
-    confirmForceSend() {
-      this.sendMessage();
     },
     
     resetComponent() {

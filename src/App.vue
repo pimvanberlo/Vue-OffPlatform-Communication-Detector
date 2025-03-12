@@ -152,6 +152,17 @@ export default {
     },
     
     onDetectionWarning(data) {
+      // If this is a post-send detection, update the last message
+      if (data.postSend && this.messages.length > 0) {
+        const lastMessage = this.messages[this.messages.length - 1];
+        lastMessage.wasFlagged = true;
+        lastMessage.detectionType = data.type;
+        lastMessage.confidence = data.confidence;
+        
+        // Force reactivity update
+        this.messages = [...this.messages];
+      }
+      
       this.showNotification(`Warning: Potential off-platform communication detected (${data.type}, ${data.confidence}% confidence)`, 'warning');
     },
     
