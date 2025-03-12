@@ -179,7 +179,9 @@ export default {
       try {
         const result = await detectOffPlatformCommunication(messageText);
         
-        if (result.confidence >= this.aiConfidenceThreshold) {
+        // Fix: Only flag if confidence meets or exceeds the threshold
+        // The comparison was correct but we'll make it more explicit
+        if (result.detected && result.confidence >= this.aiConfidenceThreshold) {
           this.showOffPlatformWarning('ai', result.reason, result.confidence);
           return true; // Return true if flagged
         }

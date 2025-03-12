@@ -60,9 +60,11 @@ export async function detectOffPlatformCommunication(message) {
         if (jsonMatch) {
           const result = JSON.parse(jsonMatch[0]);
           
+          // Ensure we're properly handling the AI confidence check
+          const confidence = result.confidence_percentage || 0;
           return {
             detected: result.is_off_platform_attempt === true,
-            confidence: result.confidence_percentage || 0,
+            confidence: confidence,
             reason: result.reasoning || 'Unknown reason'
           };
         }
