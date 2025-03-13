@@ -48,8 +48,6 @@
             :allowForceSend="true"
             :maxChars="500"
             placeholder="Type a message here..."
-            :supportedLanguages="['en', 'es', 'fr', 'de', 'zh', 'ja', 'ru']"
-            :aiDetectionDebounce="500"
             @send="onMessageSend"
             @detection-warning="onDetectionWarning"
             @detection-error="onDetectionError"

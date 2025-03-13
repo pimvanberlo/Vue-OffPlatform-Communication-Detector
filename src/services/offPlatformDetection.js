@@ -82,36 +82,3 @@ export async function detectOffPlatformCommunication(message) {
     throw new Error("Failed to analyze message for off-platform communication");
   }
 }
-
-/**
- * Analyzes message for urgency or pressure tactics that might indicate off-platform attempts
- *
- * @param {string} message - The message to analyze
- * @returns {Promise<{detected: boolean, urgencyScore: number}>} Urgency detection result
- */
-export async function detectUrgencyPatterns(message) {
-  // Patterns indicating urgency or pressure
-  const urgencyPatterns = [
-    /quickly|urgent|asap|right away|hurry|don't wait|limited time/gi,
-    /before it's too late|running out of time|expires soon|offer ends/gi,
-    /contact me now|message me soon|reach out immediately/gi,
-  ];
-
-  let urgencyScore = 0;
-  const maxScore = urgencyPatterns.length;
-
-  // Check each pattern
-  urgencyPatterns.forEach((pattern) => {
-    if (pattern.test(message)) {
-      urgencyScore++;
-    }
-  });
-
-  // Calculate percentage
-  const urgencyPercentage = (urgencyScore / maxScore) * 100;
-
-  return {
-    detected: urgencyScore > 0,
-    urgencyScore: urgencyPercentage,
-  };
-}

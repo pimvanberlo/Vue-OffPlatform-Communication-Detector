@@ -104,16 +104,6 @@ export default {
     placeholder: {
       type: String,
       default: 'Type your message here...'
-    },
-    // Languages to check for off-platform communication
-    supportedLanguages: {
-      type: Array,
-      default: () => ['en', 'es', 'fr', 'de', 'zh', 'ja', 'ru']
-    },
-    // Debounce time for AI detection in milliseconds
-    aiDetectionDebounce: {
-      type: Number,
-      default: 500
     }
   },
   data() {
@@ -158,14 +148,13 @@ export default {
       
       // Only perform regex check while typing
       if (this.enableRegexDetection) {
-        const regexResult = basicRegexCheck(currentMessage, this.supportedLanguages);
+        const regexResult = basicRegexCheck(currentMessage);
         if (regexResult.detected) {
           this.showOffPlatformWarning('regex', regexResult.pattern, 100);
           return;
         }
       }
       
-      // AI detection is now only done on send, not during typing
     },
     
     async analyzeWithAI(messageText) {
@@ -179,7 +168,6 @@ export default {
       try {
         const result = await detectOffPlatformCommunication(messageText);
         
-        // Fix: Only flag if confidence meets or exceeds the threshold
         // The comparison was correct but we'll make it more explicit
         if (result.detected && result.confidence >= this.aiConfidenceThreshold) {
           this.showOffPlatformWarning('ai', result.reason, result.confidence);

@@ -7,7 +7,6 @@
       :allowForceSend="allowForceSend"
       :maxChars="maxChars"
       :placeholder="placeholder"
-      :aiDetectionDebounce="aiDetectionDebounce"
       @send="handleSend"
       @detection-warning="handleDetectionWarning"
       @detection-error="handleDetectionError"
@@ -79,11 +78,6 @@ export default {
     placeholder: {
       type: String,
       default: 'Type your message here...'
-    },
-    // Debounce time for AI detection in milliseconds
-    aiDetectionDebounce: {
-      type: Number,
-      default: 500
     }
   },
   data() {
