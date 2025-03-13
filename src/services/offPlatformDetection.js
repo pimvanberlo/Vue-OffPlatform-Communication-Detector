@@ -3,7 +3,7 @@ import axios from "axios";
 // Config constants
 const GEMINI_API_ENDPOINT =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent";
-const API_KEY = process.env.VUE_APP_GEMINI_API_KEY || "";
+const API_KEY = process.env.GEMINI_API_KEY || "";
 
 /**
  * Detects potential off-platform communication attempts using Google Gemini 2.0 Flash Lite API
