@@ -32,7 +32,8 @@ waitForPort = 5000
 
 [deployment]
 deploymentTarget = "cloudrun"
-run = ["sh", "-c", "npx vue-cli-service serve --port 5000"]
+run = ["sh", "-c", "npx serve -s dist -l 5000"]
+build = ["sh", "-c", "npm run build"]
 
 [[ports]]
 localPort = 5000
