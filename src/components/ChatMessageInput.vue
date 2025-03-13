@@ -7,13 +7,12 @@
       :allowForceSend="allowForceSend"
       :maxChars="maxChars"
       :placeholder="placeholder"
-      :supportedLanguages="supportedLanguages"
       :aiDetectionDebounce="aiDetectionDebounce"
       @send="handleSend"
       @detection-warning="handleDetectionWarning"
       @detection-error="handleDetectionError"
     />
-    
+
     <!-- Statistics display (optional, for demonstration purposes) -->
     <div v-if="showStats" class="detection-stats">
       <div class="stats-title">Detection Statistics</div>
@@ -81,11 +80,6 @@ export default {
       type: String,
       default: 'Type your message here...'
     },
-    // Languages to check for off-platform communication
-    supportedLanguages: {
-      type: Array,
-      default: () => ['en', 'es', 'fr', 'de', 'zh', 'ja', 'ru']
-    },
     // Debounce time for AI detection in milliseconds
     aiDetectionDebounce: {
       type: Number,
@@ -109,11 +103,11 @@ export default {
       if (data.wasFlagged) {
         this.stats.messagesFlagged++;
       }
-      
+
       // Emit the send event to parent
       this.$emit('send', data);
     },
-    
+
     handleDetectionWarning(data) {
       // Update statistics based on detection type
       if (data.type === 'regex') {
@@ -121,16 +115,16 @@ export default {
       } else if (data.type === 'ai') {
         this.stats.aiDetections++;
       }
-      
+
       // Emit the warning event to parent
       this.$emit('detection-warning', data);
     },
-    
+
     handleDetectionError(error) {
       // Emit the error event to parent
       this.$emit('detection-error', error);
     },
-    
+
     resetStats() {
       this.stats = {
         messagesSent: 0,

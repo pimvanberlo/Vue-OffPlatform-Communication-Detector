@@ -58,7 +58,10 @@ export function basicRegexCheck(message) {
   for (const patternType of patternTypes) {
     const patterns = ALL_PATTERNS[patternType];
 
-    for (const pattern of patterns) {
+    for (let i = 0; i < patterns.length; i++) {
+      // Create a new RegExp instance each time to avoid issues with global flag
+      const pattern = new RegExp(patterns[i].source, patterns[i].flags);
+      
       if (pattern.test(message)) {
         return {
           detected: true,
