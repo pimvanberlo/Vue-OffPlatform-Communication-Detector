@@ -8,9 +8,3 @@ The Vue Off-Platform Communication Detector is a reusable Vue component designed
 - **AI Detection**: Utilizes the Google Gemini 2.0 Flash Lite API for advanced communication analysis.
 - **Customizable**: Fully customizable component props to suit different project needs.
 - **Easy Integration**: Simple to integrate into any Vue.js project.
-
-## Installation
-You can easily install this component via npm:
-
-```bash
-npm install vue-off-platform-communication-detector
