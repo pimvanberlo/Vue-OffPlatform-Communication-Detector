@@ -26,15 +26,14 @@ export async function detectOffPlatformCommunication(message) {
                 You are a content moderator tasked with identifying attempts to move communication off-platform.
                 
                 Analyze the following message and determine if it contains attempts to share contact information or move communication to another platform.
-                Examples include: phone numbers, emails, social media handles, URLs to other platforms, or subtle hints about meeting elsewhere.
-                
+                Examples include: phone numbers, emails, social media handles, URLs to other platforms (excluding example content inspiration links to platforms like Instagram, YouTube, or TikTok), or subtle hints about meeting elsewhere.
+                                
                 Message: "${message}"
                 
                 Respond in the following JSON format only:
                 {
                   "is_off_platform_attempt": true/false,
                   "confidence_percentage": 0-100,
-                  "reasoning": "brief explanation of why this is or isn't an off-platform attempt"
                 }
                 `,
             },

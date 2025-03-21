@@ -18,27 +18,10 @@ const PHONE_PATTERNS = [
   /\b\d{5}[-.\s]?\d{6}\b/g, // Asian format: 12345-123456
 ];
 
-// Social media handles
-const SOCIAL_MEDIA_PATTERNS = [
-  /\b(?:facebook|fb|insta|instagram|twitter|x\.com|tiktok|discord|snap|snapchat|reddit|telegram|whatsapp|signal|youtube|linkedin)\s?(?:[:.]|username|handle|profile|id)?\s?[:#@]?\s?[\w.]{3,30}\b/gi,
-  /\b@[\w.]{3,30}\b/g, // Generic handle with @
-];
-
-// Obfuscation patterns (attempts to hide contact info)
-const OBFUSCATION_PATTERNS = [
-  /\b\d+\s*[oO0]\s*\d+\s*[oO0]\s*\d+\s*[oO0]\s*\d+\b/g, // Replacing zeros with letter 'o'
-  /f\s*a\s*c\s*e\s*b\s*o\s*o\s*k/gi, // Spaced out platform names
-  /i\s*n\s*s\s*t\s*a\s*g\s*r\s*a\s*m/gi,
-  /t\s*e\s*l\s*e\s*g\s*r\s*a\s*m/gi,
-  /w\s*h\s*a\s*t\s*s\s*a\s*p\s*p/gi,
-];
-
 // Combined pattern dictionary with only the selected patterns
 const ALL_PATTERNS = {
   email: EMAIL_PATTERNS,
   phone: PHONE_PATTERNS,
-  socialMedia: SOCIAL_MEDIA_PATTERNS,
-  obfuscation: OBFUSCATION_PATTERNS,
 };
 
 /**
@@ -53,7 +36,7 @@ export function basicRegexCheck(message) {
   }
 
   // Only check selected pattern types
-  const patternTypes = ["email", "phone", "socialMedia", "obfuscation"];
+  const patternTypes = ["email", "phone"];
 
   for (const patternType of patternTypes) {
     const patterns = ALL_PATTERNS[patternType];
@@ -61,7 +44,7 @@ export function basicRegexCheck(message) {
     for (let i = 0; i < patterns.length; i++) {
       // Create a new RegExp instance each time to avoid issues with global flag
       const pattern = new RegExp(patterns[i].source, patterns[i].flags);
-      
+
       if (pattern.test(message)) {
         return {
           detected: true,

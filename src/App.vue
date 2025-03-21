@@ -42,7 +42,7 @@
           <!-- Chat input component -->
           <ChatMessageInput
             :showStats="true"
-            :aiConfidenceThreshold="70"
+            :aiConfidenceThreshold="5"
             :enableAiDetection="true"
             :enableRegexDetection="true"
             :allowForceSend="true"
